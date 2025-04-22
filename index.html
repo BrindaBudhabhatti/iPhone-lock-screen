@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iPhone Lock Screen</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(145deg, #4b0039, #000033);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background-size: cover;
+      background-position: center;
+      padding: 20px;
+    }
+
+    .status-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    .lock-icon {
+      font-size: 48px;
+      margin-top: 30px;
+    }
+
+    .title {
+      font-size: 24px;
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .dots {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid white; /* Add border instead of filling color */
+      opacity: 0.5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      background-color: transparent; /* Make sure it's transparent */
+    }
+
+    .dot.active {
+      opacity: 1;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+    }
+
+    .btn span {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 5px;
+    }
+
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+    }
+
+    /* Responsive Design for iPhone */
+    @media (max-width: 480px) {
+      .lock-icon {
+        font-size: 80px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+
+      .keypad {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+
+      .btn {
+        font-size: 26px;
+        height: 70px;
+        width: 70px;
+      }
+
+      .bottom {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="status-bar">
+    <div>Airtel</div>
+    <div>📶 🔒 🔋34%</div>
+  </div>
+
+  <div class="lock-icon">🔒</div>
+  <div class="title">Enter Passcode</div>
+  <div class="dots" id="dots">
+    <div class="dot" id="d0"></div>
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
+    <div class="dot" id="d5"></div>
+  </div>
+
+  <div class="keypad" id="keypad">
+    <!-- Buttons will be added by JS -->
+  </div>
+
+  <div class="bottom">
+    <div>Emergency</div>
+    <div>Cancel</div>
+  </div>
+
+  <script>
+    const buttons = [
+      ['1', ''], ['2', 'ABC'], ['3', 'DEF'],
+      ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'],
+      ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'],
+      ['', ''], ['0', ''], ['', '']
+    ];
+
+    const keypad = document.getElementById("keypad");
+    const dots = Array.from(document.getElementsByClassName("dot"));
+    let input = "";
+
+    // Function to show entered numbers inside the dots
+    function updateDots() {
+      dots.forEach((d, i) => {
+        if (i < input.length) {
+          d.textContent = input[i];  // Replace dot with entered number
+          d.style.backgroundColor = 'transparent';  // Ensure no fill color
+          d.classList.add("active");
+        } else {
+          d.textContent = '';  // Empty dot when no input
+          d.style.backgroundColor = 'transparent';  // No fill
+          d.classList.remove("active");
+        }
+      });
+    }
+
+    // Function to handle button click
+    buttons.forEach(([num, txt]) => {
+      const btn = document.createElement("div");
+      btn.className = "btn";
+      if (num) {
+        btn.innerHTML = `${num}<span>${txt}</span>`;
+        btn.onclick = () => {
+          if (input.length < 6) {
+            input += num;
+            updateDots();
+          }
+        };
+      } else {
+        btn.style.visibility = "hidden";
+      }
+      keypad.appendChild(btn);
+    });
+  </script>
+
+</body>
+</html>
